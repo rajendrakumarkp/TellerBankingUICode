@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Credit System</title>
+</head>
+<body>
+    <h1>Employee Credit System</h1>
+
+    <h2>Register Employee</h2>
+    <form id="register-form">
+        <input type="email" placeholder="Email" required />
+        <input type="text" placeholder="Company" required />
+        <input type="text" placeholder="Name" required />
+        <button type="submit">Register</button>
+    </form>
+
+    <h2>Check Balance</h2>
+    <form id="balance-form">
+        <input type="email" placeholder="Email" required />
+        <input type="text" placeholder="Company" required />
+        <button type="submit">Check Balance</button>
+    </form>
+
+    <script>
+        document.getElementById('register-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const response = await fetch('http://localhost:8080/rest/employees/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: e.target[0].value,
+                    company: e.target[1].value,
+                    name: e.target[2].value
+                })
+            });
+            const data = await response.json();
+            alert(JSON.stringify(data));
+        };
+
+        document.getElementById('balance-form').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const email = encodeURIComponent(e.target[0].value);
+            const company = encodeURIComponent(e.target[1].value);
+            const url = 'http://localhost:8080/rest/employees/balance?email=${email}&company=${company}';
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            alert(JSON.stringify(data));
+        };
+    </script>
+</body>
+</html>
